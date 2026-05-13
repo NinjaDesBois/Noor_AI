@@ -30,6 +30,7 @@ export default function Tafsir() {
 
   const [verse,             setVerse]             = useState(null)
   const [tafsirs,           setTafsirs]           = useState({})
+  const [tafsirErrors,      setTafsirErrors]      = useState({})
   const [activeTab,         setActiveTab]         = useState('ibn_kathir')
   const [aiSummary,         setAiSummary]         = useState(null)
   const [aiLoading,         setAiLoading]         = useState(false)
@@ -50,14 +51,18 @@ export default function Tafsir() {
       .finally(() => setLoading(false))
   }, [verseKey, lang])
 
-  useEffect(() => {
+  function fetchTafsirs() {
     if (!verseKey) return
     setTafsirLoading({ ibn_kathir: true, al_tabari: true, al_sadi: true })
-    getAllTafsirsForVerse(verseKey).then(results => {
+    setTafsirErrors({})
+    getAllTafsirsForVerse(verseKey).then(({ results, errors }) => {
       setTafsirs(results)
+      setTafsirErrors(errors)
       setTafsirLoading({})
     })
-  }, [verseKey])
+  }
+
+  useEffect(() => { fetchTafsirs() }, [verseKey])
 
   useEffect(() => {
     let active = true;
@@ -123,9 +128,9 @@ Write a clear, pedagogical summary in ${lang === 'fr' ? 'French' : 'English'} (1
   }
 
   const tabs = [
-    { key: 'ibn_kathir', label: 'Ibn Kathir' },
-    { key: 'al_tabari',  label: 'Al-Tabari'  },
-    { key: 'al_sadi',    label: "Al-Sa'di"   },
+    { key: 'ibn_kathir', label: 'Ibn Kathir', langs: 'AR / EN' },
+    { key: 'al_tabari',  label: 'Al-Tabari',  langs: 'AR'      },
+    { key: 'al_sadi',    label: "Al-Sa'di",   langs: 'AR'      },
     { key: 'ai',         label: lang === 'fr' ? 'Résumé IA' : 'AI Summary' },
   ]
 
@@ -167,8 +172,17 @@ Write a clear, pedagogical summary in ${lang === 'fr' ? 'French' : 'English'} (1
             style={{ flex: 1, padding: '8px 4px', border: 'none', borderRadius: 10, cursor: 'pointer', fontSize: 10, fontFamily: 'var(--font-mono)', transition: 'all .15s',
                      background: activeTab === tab.key ? 'var(--surface)' : 'transparent',
                      color: activeTab === tab.key ? 'var(--gold)' : 'var(--w30)',
-                     boxShadow: activeTab === tab.key ? '0 1px 4px rgba(0,0,0,.3)' : 'none' }}>
-            {tab.label}
+                     boxShadow: activeTab === tab.key ? '0 1px 4px rgba(0,0,0,.3)' : 'none',
+                     display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+            <span>{tab.label}</span>
+            {tab.langs && (
+              <span style={{ fontSize: 7, fontWeight: 700, letterSpacing: '.06em',
+                             color: activeTab === tab.key ? 'rgba(201,168,76,.65)' : 'var(--text-4)',
+                             background: activeTab === tab.key ? 'rgba(201,168,76,.10)' : 'rgba(0,0,0,.05)',
+                             borderRadius: 4, padding: '1px 4px' }}>
+                {tab.langs}
+              </span>
+            )}
           </button>
         ))}
       </div>
@@ -180,14 +194,27 @@ Write a clear, pedagogical summary in ${lang === 'fr' ? 'French' : 'English'} (1
             <div style={{ padding: '20px 0', textAlign: 'center', color: 'var(--w30)', fontSize: 13 }}>
               {lang === 'fr' ? 'Chargement…' : 'Loading…'}
             </div>
+          ) : tafsirErrors[activeTab] ? (
+            <ErrorMessage
+              message={lang === 'fr' ? 'Ce tafsir n\'est pas disponible pour ce verset' : 'This tafsir is not available for this verse'}
+              onRetry={fetchTafsirs}
+            />
           ) : tafsirs[activeTab] ? (
             <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--r-lg)', padding: 20 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
                 <span className="ar" style={{ fontSize: 14, color: 'var(--gold)' }}>{TAFSIRS[activeTab].nameAr}</span>
                 <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: 'var(--w30)' }}>
-                  {TAFSIRS[activeTab].lang.toUpperCase()}
+                  {TAFSIRS[activeTab].langs}
                 </span>
               </div>
+
+              {activeTab === 'al_sadi' && lang !== 'ar' && (
+                <div style={{ marginBottom: 14, padding: '10px 12px', background: 'rgba(201,168,76,.05)', border: '1px solid rgba(201,168,76,.15)', borderRadius: 8, fontSize: 12, color: 'var(--w30)', lineHeight: 1.6 }}>
+                  {lang === 'fr'
+                    ? 'Ce tafsir est disponible en arabe uniquement. Nous vous affichons le texte original.'
+                    : 'This tafsir is available in Arabic only. Displaying the original text.'}
+                </div>
+              )}
 
               {lang === 'fr' && TAFSIRS[activeTab].lang === 'en' && translating[activeTab] ? (
                 <p style={{ fontSize: 13, color: 'var(--w30)', fontStyle: 'italic', margin: 0 }}>
@@ -195,14 +222,16 @@ Write a clear, pedagogical summary in ${lang === 'fr' ? 'French' : 'English'} (1
                 </p>
               ) : (
                 <>
-                  <p style={{ fontSize: 13, color: 'var(--w60)', lineHeight: 1.8, margin: 0 }}>
-                    {(() => {
-                      const display = lang === 'fr' && TAFSIRS[activeTab].lang === 'en'
-                        ? (translatedTafsirs[activeTab] || tafsirs[activeTab])
-                        : tafsirs[activeTab];
-                      return display.slice(0, 1200) + (display.length > 1200 ? '…' : '');
-                    })()}
-                  </p>
+                  {(() => {
+                    const isArabic = TAFSIRS[activeTab].lang === 'ar';
+                    const display = lang === 'fr' && TAFSIRS[activeTab].lang === 'en'
+                      ? (translatedTafsirs[activeTab] || tafsirs[activeTab])
+                      : tafsirs[activeTab];
+                    const text = display.slice(0, 1200) + (display.length > 1200 ? '…' : '');
+                    return isArabic
+                      ? <p className="ar" style={{ fontSize: 'var(--font-size-arabic)', color: 'var(--text-1)', lineHeight: 2, margin: 0 }}>{text}</p>
+                      : <p style={{ fontSize: 13, color: 'var(--w60)', lineHeight: 1.8, margin: 0 }}>{text}</p>;
+                  })()}
                   {translationFailed[activeTab] && lang === 'fr' && (
                     <p style={{ fontSize: 12, color: 'var(--w30)', margin: '10px 0 0' }}>
                       Traduction indisponible — texte en anglais
@@ -213,7 +242,7 @@ Write a clear, pedagogical summary in ${lang === 'fr' ? 'French' : 'English'} (1
             </div>
           ) : (
             <div style={{ padding: '20px', textAlign: 'center', color: 'var(--w30)', fontSize: 13, background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--r-lg)' }}>
-              {lang === 'fr' ? 'Non disponible pour ce verset.' : 'Not available for this verse.'}
+              {lang === 'fr' ? 'Ce tafsir n\'est pas disponible pour ce verset.' : 'This tafsir is not available for this verse.'}
             </div>
           )
         )}

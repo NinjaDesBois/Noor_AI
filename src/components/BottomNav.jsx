@@ -6,7 +6,7 @@ const TABS = [
   {
     path: '/home', key: 'home',
     icon: (active) => (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={active ? 'var(--text-1)' : 'var(--text-4)'} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={active ? 'var(--gold)' : 'var(--text-3)'} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
         <polyline points="9 22 9 12 15 12 15 22"/>
       </svg>
@@ -15,7 +15,7 @@ const TABS = [
   {
     path: '/coran', key: 'quran',
     icon: (active) => (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={active ? 'var(--text-1)' : 'var(--text-4)'} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={active ? 'var(--gold)' : 'var(--text-3)'} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
         <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
       </svg>
@@ -24,7 +24,7 @@ const TABS = [
   {
     path: '/prayers', key: 'prayers',
     icon: (active) => (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={active ? 'var(--text-1)' : 'var(--text-4)'} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={active ? 'var(--gold)' : 'var(--text-3)'} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <circle cx="12" cy="12" r="10"/>
         <polyline points="12 6 12 12 16 14"/>
       </svg>
@@ -33,7 +33,7 @@ const TABS = [
   {
     path: '/assistant', key: 'assistant',
     icon: (active) => (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={active ? 'var(--text-1)' : 'var(--text-4)'} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={active ? 'var(--gold)' : 'var(--text-3)'} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
       </svg>
     ),
@@ -41,9 +41,9 @@ const TABS = [
   { path: null, key: 'more',
     icon: (active) => (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" strokeWidth="1.8" strokeLinecap="round">
-        <circle cx="5"  cy="12" r="1.2" fill={active ? 'var(--text-1)' : 'var(--text-4)'}/>
-        <circle cx="12" cy="12" r="1.2" fill={active ? 'var(--text-1)' : 'var(--text-4)'}/>
-        <circle cx="19" cy="12" r="1.2" fill={active ? 'var(--text-1)' : 'var(--text-4)'}/>
+        <circle cx="5"  cy="12" r="1.2" fill={active ? 'var(--gold)' : 'var(--text-3)'}/>
+        <circle cx="12" cy="12" r="1.2" fill={active ? 'var(--gold)' : 'var(--text-3)'}/>
+        <circle cx="19" cy="12" r="1.2" fill={active ? 'var(--gold)' : 'var(--text-3)'}/>
       </svg>
     ),
   },
@@ -108,14 +108,14 @@ export default function BottomNav() {
         left: 0,
         right: 0,
         transform: drawer ? 'translateY(0)' : 'translateY(110%)',
-        background: 'var(--card)',
-        borderTop: '1px solid var(--border)',
+        background: 'var(--dark)',
+        borderTop: '1px solid rgba(255,255,255,.08)',
         borderRadius: '20px 20px 0 0',
         zIndex: 95,
         transition: 'transform 0.26s cubic-bezier(0.32,0.72,0,1)',
         paddingBottom: 8,
       }}>
-        <div style={{ width: 32, height: 3, background: 'var(--border)', borderRadius: 2, margin: '10px auto 14px' }}/>
+        <div style={{ width: 32, height: 3, background: 'rgba(255,255,255,.15)', borderRadius: 2, margin: '10px auto 14px' }}/>
         {DRAWER_ITEMS.map(item => {
           const basePath = '/' + item.path.split('/')[1]
           const isActive = location.pathname.startsWith(basePath)
@@ -128,10 +128,10 @@ export default function BottomNav() {
                 alignItems: 'center',
                 gap: 16,
                 width: '100%',
-                background: isActive ? 'rgba(201,168,76,.06)' : 'transparent',
+                background: isActive ? 'rgba(201,168,76,.10)' : 'transparent',
                 border: 'none',
-                borderBottom: '1px solid var(--border)',
-                color: isActive ? 'var(--gold)' : 'var(--text-2)',
+                borderBottom: '1px solid rgba(255,255,255,.07)',
+                color: isActive ? 'var(--gold)' : 'rgba(255,255,255,.70)',
                 padding: '14px 24px',
                 fontSize: 14,
                 fontFamily: 'var(--font-body)',

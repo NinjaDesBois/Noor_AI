@@ -15,7 +15,10 @@
       "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\Z-BOOK\\\\Dropbox\\\\PC\\\\Desktop\\\\Ninja\\\\noor-ai\" -Recurse -Directory)",
       "Bash(Select-Object FullName)",
       "Bash(Format-List)",
-      "Bash(npx vite *)"
+      "Bash(npx vite *)",
+      "Bash(curl -s \"https://api.quran.com/api/v4/tafsirs?language=ar\")",
+      "Bash(python -c \"import sys,json; data=json.load\\(sys.stdin\\); [print\\(t['id'], t['name'], t.get\\('language_name',''\\)\\) for t in data.get\\('tafsirs',[]\\)]\")",
+      "Bash(curl -s \"https://api.quran.com/api/v4/tafsirs?language=en\")"
     ]
   }
 }

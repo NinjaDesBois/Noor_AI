@@ -4,30 +4,36 @@ const BASE = 'https://api.quran.com/api/v4';
 const ARABIC_RE = /[؀-ۿ]/;
 
 export const TAFSIRS = {
-  ibn_kathir: { id: 169, name: 'Ibn Kathir', lang: 'en', nameAr: 'ابن كثير' },
-  al_tabari:  { id: 1,   name: 'Al-Tabari',  lang: 'ar', nameAr: 'الطبري'  },
-  al_sadi:    { id: 91,  name: "Al-Sa'di",   lang: 'ar', nameAr: 'السعدي'  },
+  ibn_kathir: { id: 169, name: 'Ibn Kathir', lang: 'en', nameAr: 'ابن كثير', langs: 'AR / EN', arOnly: false },
+  al_tabari:  { id: 15,  name: 'Al-Tabari',  lang: 'ar', nameAr: 'الطبري',   langs: 'AR',      arOnly: true  },
+  al_sadi:    { id: 91,  name: "Al-Sa'di",   lang: 'ar', nameAr: 'السعدي',   langs: 'AR',      arOnly: true  },
 };
 
 export async function getTafsirForVerse(verseKey, tafsirId) {
   const res = await fetch(`${BASE}/tafsirs/${tafsirId}/by_ayah/${verseKey}`);
-  if (!res.ok) throw new Error(`Tafsir ${tafsirId} unavailable`);
+  if (!res.ok) {
+    console.error(`Tafsir ${tafsirId} for ${verseKey}: HTTP ${res.status}`);
+    return null;
+  }
   const { tafsir } = await res.json();
   return tafsir?.text?.replace(/<[^>]*>/g, '').trim() || null;
 }
 
 export async function getAllTafsirsForVerse(verseKey) {
   const results = {};
+  const errors = {};
   await Promise.allSettled(
     Object.entries(TAFSIRS).map(async ([key, t]) => {
       try {
         results[key] = await getTafsirForVerse(verseKey, t.id);
-      } catch {
+      } catch (err) {
+        console.error(`Tafsir ${key} fetch error:`, err);
         results[key] = null;
+        errors[key] = true;
       }
     })
   );
-  return results;
+  return { results, errors };
 }
 
 function splitIntoChunks(text, maxLen = 400) {
