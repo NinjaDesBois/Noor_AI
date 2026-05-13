@@ -24,8 +24,13 @@ export default function SourateReader() {
   const [memorized,   setMemorized]   = useState({})
   const [continuous,  setContinuous]  = useState(false)
 
-  const audioRef   = useRef(null)
-  const reciter    = getReciter()
+  const audioRef    = useRef(null)
+  const playingRef  = useRef(null)   // mirrors `playing` state; safe to read inside onEnded
+  const versesRef   = useRef([])     // mirrors `verses` state; avoids stale closure in onEnded
+  const reciter     = getReciter()
+
+  // Keep refs in sync with state (runs synchronously in render, before effects)
+  versesRef.current = verses
 
   // Load memorized state
   useEffect(() => {
@@ -66,6 +71,18 @@ export default function SourateReader() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [onScroll])
 
+  // Stop and clear audio when navigating to a different surah
+  useEffect(() => {
+    const audio = audioRef.current
+    if (audio) {
+      audio.pause()
+      audio.src = ''
+      audio.load()
+    }
+    playingRef.current = null
+    setPlaying(null)
+  }, [surahNum])
+
   function toggleMemorized(verseNum) {
     const next = !memorized[verseNum]
     setVerseMemorized(surahNum, verseNum, next)
@@ -73,31 +90,35 @@ export default function SourateReader() {
   }
 
   function playVerse(verse) {
-    if (playing === verse.key) {
+    if (playingRef.current === verse.key) {
       audioRef.current?.pause()
+      playingRef.current = null
       setPlaying(null)
       return
     }
-    // Replace CDN URL with chosen reciter
     const url = verse.audioUrl.replace('ar.alafasy', reciter)
     if (audioRef.current) {
       audioRef.current.pause()
       audioRef.current.src = url
       audioRef.current.play().catch(() => {})
     }
+    playingRef.current = verse.key
     setPlaying(verse.key)
   }
 
   function onAudioEnded() {
-    if (!continuous) { setPlaying(null); return }
-    const idx = verses.findIndex(v => v.key === playing)
-    if (idx >= 0 && idx < verses.length - 1) {
-      const next = verses[idx + 1]
+    if (!continuous) { playingRef.current = null; setPlaying(null); return }
+    const vss = versesRef.current
+    const idx = vss.findIndex(v => v.key === playingRef.current)
+    if (idx >= 0 && idx < vss.length - 1) {
+      const next = vss[idx + 1]
       const url  = next.audioUrl.replace('ar.alafasy', reciter)
       audioRef.current.src = url
       audioRef.current.play().catch(() => {})
+      playingRef.current = next.key
       setPlaying(next.key)
     } else {
+      playingRef.current = null
       setPlaying(null)
     }
   }
