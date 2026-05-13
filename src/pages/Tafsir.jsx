@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { LangContext, useLang } from '../i18n/translations'
 import { getSingleVerse } from '../services/quranService'
-import { getAllTafsirsForVerse, TAFSIRS } from '../services/tafsirService'
+import { getAllTafsirsForVerse, TAFSIRS, translateTafsirText } from '../services/tafsirService'
 import ErrorMessage from '../components/ErrorMessage'
 
 const SYSTEM_PROMPT_TAFSIR = `You are a knowledgeable Islamic scholar assistant. Your task is to summarize tafsir (Quranic exegesis) for a given verse in a clear, pedagogical way.
@@ -13,28 +13,40 @@ Rules:
 - Keep the summary between 150-200 words
 - Respond in the language specified`
 
+async function performTranslation(originalText, verseKey, tafsirId, retriesLeft = 2) {
+  const result = await translateTafsirText(originalText, verseKey, tafsirId);
+  if (result === originalText && retriesLeft > 0) {
+    await new Promise(r => setTimeout(r, 1000));
+    return performTranslation(originalText, verseKey, tafsirId, retriesLeft - 1);
+  }
+  return { text: result, failed: result === originalText };
+}
+
 export default function Tafsir() {
   const { verseKey }  = useParams()
   const navigate      = useNavigate()
   const lang          = useContext(LangContext)
   const t             = useLang()
 
-  const [verse,       setVerse]       = useState(null)
-  const [tafsirs,     setTafsirs]     = useState({})
-  const [activeTab,   setActiveTab]   = useState('ibn_kathir')
-  const [aiSummary,   setAiSummary]   = useState(null)
-  const [aiLoading,   setAiLoading]   = useState(false)
-  const [aiError,     setAiError]     = useState(null)
-  const [loading,     setLoading]     = useState(true)
-  const [error,       setError]       = useState(null)
-  const [tafsirLoading, setTafsirLoading] = useState({})
+  const [verse,             setVerse]             = useState(null)
+  const [tafsirs,           setTafsirs]           = useState({})
+  const [activeTab,         setActiveTab]         = useState('ibn_kathir')
+  const [aiSummary,         setAiSummary]         = useState(null)
+  const [aiLoading,         setAiLoading]         = useState(false)
+  const [aiError,           setAiError]           = useState(null)
+  const [loading,           setLoading]           = useState(true)
+  const [error,             setError]             = useState(null)
+  const [tafsirLoading,     setTafsirLoading]     = useState({})
+  const [translating,       setTranslating]       = useState({})
+  const [translatedTafsirs, setTranslatedTafsirs] = useState({})
+  const [translationFailed, setTranslationFailed] = useState({})
 
   useEffect(() => {
     if (!verseKey) return
     setLoading(true)
     getSingleVerse(verseKey, lang)
       .then(setVerse)
-      .catch(() => setError(lang === 'fr' ? t('error_quran') : t('error_quran')))
+      .catch(() => setError(t('error_quran')))
       .finally(() => setLoading(false))
   }, [verseKey, lang])
 
@@ -46,6 +58,35 @@ export default function Tafsir() {
       setTafsirLoading({})
     })
   }, [verseKey])
+
+  useEffect(() => {
+    let active = true;
+
+    if (lang !== 'fr') {
+      setTranslatedTafsirs({});
+      setTranslationFailed({});
+      return;
+    }
+
+    const toTranslate = Object.entries(TAFSIRS).filter(([, meta]) => meta.lang === 'en');
+
+    for (const [key, meta] of toTranslate) {
+      const text = tafsirs[key];
+      if (!text) continue;
+
+      setTranslating(prev => ({ ...prev, [key]: true }));
+      setTranslationFailed(prev => ({ ...prev, [key]: false }));
+
+      performTranslation(text, verseKey, meta.id).then(({ text: translated, failed }) => {
+        if (!active) return;
+        setTranslatedTafsirs(prev => ({ ...prev, [key]: translated }));
+        setTranslationFailed(prev => ({ ...prev, [key]: failed }));
+        setTranslating(prev => ({ ...prev, [key]: false }));
+      });
+    }
+
+    return () => { active = false; };
+  }, [tafsirs, lang, verseKey])
 
   async function loadAiSummary() {
     if (aiSummary || aiLoading) return
@@ -74,7 +115,7 @@ Write a clear, pedagogical summary in ${lang === 'fr' ? 'French' : 'English'} (1
       if (!res.ok) throw new Error('API error')
       const data = await res.json()
       setAiSummary(data.content?.[0]?.text || '')
-    } catch (e) {
+    } catch {
       setAiError(lang === 'fr' ? 'Résumé IA indisponible — réessayez' : 'AI summary unavailable — retry')
     } finally {
       setAiLoading(false)
@@ -147,9 +188,28 @@ Write a clear, pedagogical summary in ${lang === 'fr' ? 'French' : 'English'} (1
                   {TAFSIRS[activeTab].lang.toUpperCase()}
                 </span>
               </div>
-              <p style={{ fontSize: 13, color: 'var(--w60)', lineHeight: 1.8, margin: 0 }}>
-                {tafsirs[activeTab].slice(0, 1200)}{tafsirs[activeTab].length > 1200 ? '…' : ''}
-              </p>
+
+              {lang === 'fr' && TAFSIRS[activeTab].lang === 'en' && translating[activeTab] ? (
+                <p style={{ fontSize: 13, color: 'var(--w30)', fontStyle: 'italic', margin: 0 }}>
+                  Traduction en cours...
+                </p>
+              ) : (
+                <>
+                  <p style={{ fontSize: 13, color: 'var(--w60)', lineHeight: 1.8, margin: 0 }}>
+                    {(() => {
+                      const display = lang === 'fr' && TAFSIRS[activeTab].lang === 'en'
+                        ? (translatedTafsirs[activeTab] || tafsirs[activeTab])
+                        : tafsirs[activeTab];
+                      return display.slice(0, 1200) + (display.length > 1200 ? '…' : '');
+                    })()}
+                  </p>
+                  {translationFailed[activeTab] && lang === 'fr' && (
+                    <p style={{ fontSize: 12, color: 'var(--w30)', margin: '10px 0 0' }}>
+                      Traduction indisponible — texte en anglais
+                    </p>
+                  )}
+                </>
+              )}
             </div>
           ) : (
             <div style={{ padding: '20px', textAlign: 'center', color: 'var(--w30)', fontSize: 13, background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--r-lg)' }}>
