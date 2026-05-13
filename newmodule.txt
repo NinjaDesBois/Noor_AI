@@ -1,0 +1,170 @@
+You are working on Noor AI, an Islamic app for French and English-speaking Muslims. The tech stack is React 18 + Vite, React Router v6, inline CSS + CSS variables only (NO Tailwind, NO icon libraries, SVG inline stroke only), with fonts Playfair Display + Amiri + DM Sans loaded via Google Fonts.
+
+## TASK: Add a "New Muslims" learning section
+
+### 1. New route + page file
+
+Create `src/pages/NouveauxMusulmans.jsx` and add the route `/nouveaux-musulmans` in `src/App.jsx`.
+
+---
+
+### 2. Navigation integration
+
+**Sidebar.jsx (desktop)** — add a nav item between "Rappels" and "Calendrier":
+- SVG icon: a simple open book (inline stroke, no library)
+- Label FR: "Débuter" / Label EN: "Getting Started"
+- Route: `/nouveaux-musulmans`
+
+**BottomNav.jsx (mobile)** — add it inside the "Plus" drawer with the same label and icon.
+
+---
+
+### 3. Page structure — `NouveauxMusulmans.jsx`
+
+The page uses the existing design system variables exactly as defined in `globals.css`. No new CSS variables. No Tailwind.
+
+**Page layout:**
+<div className="main-content">
+  <div className="page-topbar">
+    <h1 className="page-title" style={{ fontFamily: 'var(--font-display)' }}>
+      FR: "Pour les nouveaux musulmans" / EN: "For New Muslims"
+    </h1>
+    <p style={{ color: 'var(--text-2)' }}>
+      FR: "Apprenez les bases pas à pas" / EN: "Learn the basics step by step"
+    </p>
+  </div>
+````
+Modules list — use .mod-grid (3 cols desktop, 2 cols mobile) with .mod-item cards. Each card has:
+
+An SVG icon (inline stroke, --gold color)
+A title
+A short description
+A "Commencer / Start" button that opens the detail view
+
+7 learning modules to create:
+idFR titleEN titleicon ideawuduLes ablutions (Wudu)Ablutions (Wudu)water dropletprayerLa prière (Salat)The Prayer (Salat)person bowingshahadaLa ChahadaThe Shahadacrescent + starpillarsLes 5 piliersThe 5 Pillarsfive columnsquran-introLire le CoranReading the Quranopen bookhalalHalal & HaramHalal & Haramscale/balanceduaLes invocations (Dua)Supplications (Dua)hands raised
+
+4. Detail view (inline, same page)
+When a module card is clicked, selectedModule state is set and the page shows a detail panel (replace the grid, no routing needed). Add a "← Retour / Back" button to return to the grid.
+Each module detail contains:
+WUDU module:
+
+Step-by-step guide: Intention (niyyah), wash hands 3x, rinse mouth 3x, rinse nose 3x, wash face 3x, wash arms to elbows 3x (right then left), wipe head once, wipe ears once, wash feet 3x (right then left)
+For each step: step number badge (gold), Arabic name with .ar class, French + English description
+Illustration placeholder: a <div> styled as an illustration slot (bg: var(--border), border-radius: var(--r-lg), height: 180px, centered text "Illustration à venir") — this is where images will be inserted later
+Important note card: "Le wudu est invalidé par..." list
+
+PRAYER (Salat) module:
+
+Prerequisites: avoir le wudu, être en état de pureté, direction de la Qibla
+The 17 obligatory acts (fard) listed clearly
+Prayer times reminder (link to /prayers route)
+Step-by-step for Fatiha recitation: display Surah Al-Fatiha fetched from api.quran.com/api/v4/verses/by_chapter/1?translations=131&fields=text_uthmani — show Arabic with .ar class + translation
+Illustration placeholder same style as wudu
+
+SHAHADA module:
+
+The text in Arabic with .ar class (fetched from quran.com or hardcoded ONLY for the shahada formula since it's not Quranic text — exception to the rule)
+Actually: display it as plain text, NOT as Quranic text: "أَشْهَدُ أَنْ لَا إِلَٰهَ إِلَّا ٱللَّهُ وَأَشْهَدُ أَنَّ مُحَمَّدًا رَسُولُ ٱللَّهِ"
+Transliteration in Space Mono font
+Meaning explanation FR + EN
+What it means to say the Shahada
+
+PILLARS module:
+
+5 cards, one per pillar: Shahada, Salat, Zakat, Sawm, Hajj
+Each with icon, name AR + FR/EN, one-line description
+Links where applicable: Salat → /prayers, Zakat → /zakat
+
+QURAN-INTRO module:
+
+How the Quran is structured (114 surahs, Meccan/Medinan)
+How to read Arabic basics (right to left, no vowel marks explanation)
+Link to /coran
+
+HALAL module:
+
+Clear cards: what is halal (permissible), what is haram (forbidden)
+Food section: prohibited items list
+Financial section: riba (interest) explained simply
+Note: "For complex situations, consult a scholar — ECFR: ecfr.eu"
+
+DUA module:
+
+What is dua and its importance
+5 essential daily duas with Arabic (.ar class), transliteration, translation FR/EN:
+
+Before eating: بِسْمِ اللَّهِ
+After eating: الْحَمْدُ لِلَّهِ
+Before sleeping: بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا
+Upon waking: الْحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا
+When entering home: بِسْمِ اللَّهِ وَلَجْنَا
+
+
+
+
+5. Illustration slots system
+Create a reusable <IllustrationSlot label="..." /> component in src/components/IllustrationSlot.jsx:
+jsx// Renders a styled placeholder div ready to receive an <img> later
+// Props: label (string), src (optional — if provided, shows <img>, else shows placeholder)
+// Style: width 100%, height 200px, bg var(--border), border-radius var(--r-lg),
+//        display flex, align-items center, justify-content center
+//        If src provided: <img style={{ width:'100%', height:'100%', objectFit:'cover', borderRadius:'var(--r-lg)' }} />
+
+6. Progress tracking
+Add a progress system using localStorage key noor_beginner_progress:
+javascript// JSON object: { wudu: true, prayer: false, shahada: true, ... }
+On each module card in the grid, show a small checkmark badge (green, var(--em)) if the module is marked complete.
+At the bottom of each detail view, add a button:
+
+"Marquer comme appris ✓ / Mark as learned ✓"
+Saves to localStorage and updates the card badge
+Style: bg var(--em), color white, border-radius var(--r-md), padding 12px 24px
+
+
+7. i18n
+Add these keys to src/i18n/translations.js for both fr and en:
+javascript// FR
+getting_started: "Débuter",
+for_new_muslims: "Pour les nouveaux musulmans",
+learn_basics: "Apprenez les bases pas à pas",
+mark_learned: "Marquer comme appris",
+back: "← Retour",
+illustration_coming: "Illustration à venir",
+module_wudu: "Les ablutions",
+module_prayer: "La prière",
+module_shahada: "La Chahada",
+module_pillars: "Les 5 piliers",
+module_quran_intro: "Lire le Coran",
+module_halal: "Halal & Haram",
+module_dua: "Les invocations",
+
+// EN
+getting_started: "Getting Started",
+for_new_muslims: "For New Muslims",
+learn_basics: "Learn the basics step by step",
+mark_learned: "Mark as learned",
+back: "← Back",
+illustration_coming: "Illustration coming soon",
+// ... (same pattern)
+
+8. Styling rules (STRICT)
+
+Use ONLY existing CSS variables from globals.css
+All Arabic text MUST use className="ar" (Amiri font, min 22px, RTL, text-align:right)
+Transliterations use fontFamily: 'Space Mono, monospace'
+Cards use .card class (bg white, border-radius var(--r-lg), padding 22px)
+Step number badges: round 28px, bg var(--gold), color white, fontWeight 700
+NO emojis in UI — use inline SVG stroke icons only
+All API calls wrapped in try/catch with ErrorMessage component on failure
+Responsive: the mod-grid collapses to 2 cols at ≤900px and 1 col at ≤600px
+
+
+9. ABSOLUTE RULES (from project spec — never break)
+
+Quranic text ONLY from api.quran.com field text_uthmani — never hardcode
+The Shahada formula is NOT Quranic text — it can be hardcoded as Arabic string
+All Arabic strings must use className="ar"
+Never fabricate hadiths or scholarly opinions
+IslamicPattern.jsx does NOT exist — never import it
+Every external API call has try/catch + ErrorMessage fallback

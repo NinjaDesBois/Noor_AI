@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir \"C:\\\\Users\\\\Z-BOOK\\\\Dropbox\\\\PC\\\\Desktop\\\\Ninja\\\\noor-ai\\\\src\\\\styles\")",
+      "Bash(mkdir \"C:\\\\Users\\\\Z-BOOK\\\\Dropbox\\\\PC\\\\Desktop\\\\Ninja\\\\noor-ai\\\\src\\\\i18n\")",
+      "PowerShell(ls \"C:\\\\Users\\\\Z-BOOK\\\\Dropbox\\\\PC\\\\Desktop\\\\Ninja\\\\noor-ai\\\\src\"; if \\(!\\(Test-Path \"C:\\\\Users\\\\Z-BOOK\\\\Dropbox\\\\PC\\\\Desktop\\\\Ninja\\\\noor-ai\\\\src\\\\components\"\\)\\) { mkdir \"C:\\\\Users\\\\Z-BOOK\\\\Dropbox\\\\PC\\\\Desktop\\\\Ninja\\\\noor-ai\\\\src\\\\components\" })",
+      "PowerShell(if \\(!\\(Test-Path \"C:\\\\Users\\\\Z-BOOK\\\\Dropbox\\\\PC\\\\Desktop\\\\Ninja\\\\noor-ai\\\\src\\\\services\"\\)\\) { mkdir \"C:\\\\Users\\\\Z-BOOK\\\\Dropbox\\\\PC\\\\Desktop\\\\Ninja\\\\noor-ai\\\\src\\\\services\" }; ls \"C:\\\\Users\\\\Z-BOOK\\\\Dropbox\\\\PC\\\\Desktop\\\\Ninja\\\\noor-ai\\\\src\")",
+      "Bash(npm run *)",
+      "PowerShell(if \\(!\\(Test-Path \"C:\\\\Users\\\\Z-BOOK\\\\Dropbox\\\\PC\\\\Desktop\\\\Ninja\\\\noor-ai\\\\src\\\\utils\"\\)\\) { mkdir \"C:\\\\Users\\\\Z-BOOK\\\\Dropbox\\\\PC\\\\Desktop\\\\Ninja\\\\noor-ai\\\\src\\\\utils\" })",
+      "Bash(del *)",
+      "PowerShell(attrib *)"
+    ]
+  }
+}

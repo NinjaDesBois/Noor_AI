@@ -1,0 +1,32 @@
+export const THEME_META = {
+  ramadan:     { fr: 'Ramadan',      en: 'Ramadan',      color: '#4da6ff' },
+  fasting:     { fr: 'Jeûne',        en: 'Fasting',      color: '#4da6ff' },
+  gratitude:   { fr: 'Gratitude',    en: 'Gratitude',    color: '#00c864' },
+  sacrifice:   { fr: 'Sacrifice',    en: 'Sacrifice',    color: '#e06060' },
+  hajj:        { fr: 'Hajj',         en: 'Hajj',         color: '#c9a84c' },
+  history:     { fr: 'Histoire',     en: 'History',      color: '#ffa020' },
+  prophet:     { fr: 'Prophète',     en: 'Prophet',      color: '#c9a84c' },
+  spirituality:{ fr: 'Spiritualité', en: 'Spirituality', color: '#9b8fd4' },
+  patience:    { fr: 'Patience',     en: 'Patience',     color: '#00c864' },
+  family:      { fr: 'Famille',      en: 'Family',       color: '#4da6ff' },
+  honesty:     { fr: 'Honnêteté',   en: 'Honesty',      color: '#00c864' },
+  prayer:      { fr: 'Prière',       en: 'Prayer',       color: '#c9a84c' },
+  generosity:  { fr: 'Générosité',  en: 'Generosity',   color: '#00c864' },
+  dhikr:       { fr: 'Dhikr',        en: 'Dhikr',        color: '#9b8fd4' },
+  tawakkul:    { fr: 'Tawakkul',     en: 'Tawakkul',     color: '#4da6ff' },
+  knowledge:   { fr: 'Savoir',       en: 'Knowledge',    color: '#c9a84c' },
+  mercy:       { fr: 'Miséricorde',  en: 'Mercy',        color: '#33d17a' },
+  quran:       { fr: 'Coran',        en: 'Quran',        color: '#c9a84c' },
+  speech:      { fr: 'Parole',       en: 'Speech',       color: '#4da6ff' },
+  tawba:       { fr: 'Tawba',        en: 'Repentance',   color: '#e06060' },
+  neighbors:   { fr: 'Voisins',      en: 'Neighbors',    color: '#33d17a' },
+  work:        { fr: 'Travail',      en: 'Work',         color: '#ffa020' },
+  zakat:       { fr: 'Zakat',        en: 'Zakat',        color: '#c9a84c' },
+  eid:         { fr: 'Aïd',          en: 'Eid',          color: '#c9a84c' },
+}
+
+export const EVENT_TYPE_META = {
+  obligatory:    { fr: 'Obligatoire',  en: 'Obligatory',    color: '#e05050' },
+  recommended:   { fr: 'Recommandé',  en: 'Recommended',   color: '#c9a84c' },
+  commemorative: { fr: 'Commémoratif',en: 'Commemorative', color: '#4da6ff' },
+}
