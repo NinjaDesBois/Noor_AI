@@ -113,22 +113,14 @@ export default function Assistant() {
     setLoading(true)
 
     try {
-      const apiKey = import.meta.env.VITE_ANTHROPIC_API_KEY
-      if (!apiKey) throw new Error('VITE_ANTHROPIC_API_KEY not set')
-
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
+      const res = await fetch('/api/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-api-key': apiKey,
-          'anthropic-version': '2023-06-01',
-          'anthropic-dangerous-direct-browser-access': 'true',
         },
         body: JSON.stringify({
-          model: 'claude-sonnet-4-5',
-          max_tokens: 1500,
-          system: SYSTEM_PROMPT,
           messages: history,
+          system: SYSTEM_PROMPT,
         }),
       })
 

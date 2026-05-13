@@ -49,8 +49,6 @@ export default function Tafsir() {
 
   async function loadAiSummary() {
     if (aiSummary || aiLoading) return
-    const apiKey = import.meta.env.VITE_ANTHROPIC_API_KEY
-    if (!apiKey) { setAiError('API key not configured'); return }
     setAiLoading(true); setAiError(null)
     try {
       const tafsirTexts = Object.entries(TAFSIRS)
@@ -63,19 +61,14 @@ Available tafsir excerpts:
 ${tafsirTexts}
 Write a clear, pedagogical summary in ${lang === 'fr' ? 'French' : 'English'} (150-200 words max). Mention asbab al-nuzul if present. Be factual, cite sources, add nothing not found in the provided tafsirs.`
 
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
+      const res = await fetch('/api/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-api-key': apiKey,
-          'anthropic-version': '2023-06-01',
-          'anthropic-dangerous-direct-browser-access': 'true',
         },
         body: JSON.stringify({
-          model: 'claude-sonnet-4-5',
-          max_tokens: 600,
-          system: SYSTEM_PROMPT_TAFSIR,
           messages: [{ role: 'user', content: userMsg }],
+          system: SYSTEM_PROMPT_TAFSIR,
         }),
       })
       if (!res.ok) throw new Error('API error')
