@@ -1,5 +1,8 @@
 import { useState, useContext } from 'react'
 import { LangContext, useLang } from '../i18n/translations'
+import { useTheme } from '../context/ThemeContext'
+import { useFontSize } from '../context/FontSizeContext'
+import { useContrast } from '../context/ContrastContext'
 import {
   setLang as saveLang,
   getReciter, setReciter,
@@ -15,6 +18,14 @@ const RECITERS = [
   { id: 'ar.alafasy',    label: 'Mishary Al-Afasy'  },
   { id: 'ar.abdulsamad', label: 'Abdul Basit'        },
   { id: 'ar.husary',     label: 'Al-Husary'          },
+]
+
+const THEMES = [
+  { id: 'default', labelFr: 'Ivoire',       labelEn: 'Ivory',         bg: '#f7f5f0', gold: '#c9a84c' },
+  { id: 'emerald', labelFr: 'Émeraude',     labelEn: 'Emerald',       bg: '#0d1f1a', gold: '#d4a843' },
+  { id: 'night',   labelFr: 'Nuit de Qadr', labelEn: 'Night of Qadr', bg: '#0d1120', gold: '#c9a84c' },
+  { id: 'sand',    labelFr: 'Sable',         labelEn: 'Sand',          bg: '#f2ede4', gold: '#b8924a' },
+  { id: 'slate',   labelFr: 'Ardoise',       labelEn: 'Slate',         bg: '#1a1d23', gold: '#c9a84c' },
 ]
 
 function Section({ label, children }) {
@@ -58,6 +69,10 @@ export default function Settings({ lang, setLang }) {
   const [notifTime,    setNotifTimeState] = useState(getNotifTime)
   const [toast,        setToast]          = useState('')
   const [confirmReset, setConfirmReset]   = useState(false)
+
+  const { theme, setTheme }             = useTheme()
+  const { fontSize, setFontSize }       = useFontSize()
+  const { highContrast, setHighContrast } = useContrast()
 
   const streak      = getStreakCount()
   const hifzVerses  = getTotalMemorizedVerses()
@@ -147,6 +162,98 @@ export default function Settings({ lang, setLang }) {
           <div style={{ fontSize: 11, color: 'var(--w30)', marginTop: 4 }}>{lang === 'fr' ? 'versets mémorisés' : 'verses memorized'}</div>
         </div>
       </div>
+
+      {/* Appearance */}
+      <Section label={t('appearance')}>
+        {/* Color theme */}
+        <div style={{ padding: '12px 18px 14px', borderBottom: '1px solid var(--border)' }}>
+          <div style={{ fontSize: 11, color: 'var(--text-3)', fontWeight: 700, letterSpacing: '.06em', textTransform: 'uppercase', marginBottom: 10 }}>
+            {t('color_theme')}
+          </div>
+          <div className="theme-cards-row">
+            {THEMES.map(th => (
+              <div key={th.id} onClick={() => setTheme(th.id)}
+                style={{
+                  cursor: 'pointer',
+                  display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
+                  padding: '8px 4px',
+                  borderRadius: 'var(--r-md)',
+                  border: `2px solid ${theme === th.id ? 'var(--gold)' : 'transparent'}`,
+                  transition: 'border-color .15s',
+                }}>
+                <div style={{
+                  width: 48, height: 48, borderRadius: '50%',
+                  background: th.bg,
+                  border: `3px solid ${th.gold}`,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  flexShrink: 0,
+                }}>
+                  {theme === th.id && (
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"
+                      stroke={th.gold} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="3,9 7,13 15,5"/>
+                    </svg>
+                  )}
+                </div>
+                <span style={{ fontSize: 10, color: 'var(--text-2)', textAlign: 'center', lineHeight: 1.3 }}>
+                  {lang === 'fr' ? th.labelFr : th.labelEn}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Text size */}
+        <Row label={t('text_size')}>
+          <div style={{ display: 'flex', gap: 6 }}>
+            {['S', 'M', 'L'].map(size => (
+              <button key={size} onClick={() => setFontSize(size)}
+                style={{
+                  width: 46, height: 46, borderRadius: 'var(--r-sm)',
+                  border: `1px solid ${fontSize === size ? 'var(--gold)' : 'var(--border)'}`,
+                  background: fontSize === size ? 'var(--gold)' : 'transparent',
+                  color: fontSize === size ? '#fff' : 'var(--text-2)',
+                  cursor: 'pointer',
+                  display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                  gap: 1,
+                  transition: 'background .15s, border-color .15s',
+                  flexShrink: 0,
+                }}>
+                <span style={{
+                  fontFamily: 'var(--font-arabic)',
+                  fontSize: size === 'S' ? 13 : size === 'M' ? 17 : 22,
+                  lineHeight: 1,
+                  display: 'block',
+                }}>أ</span>
+                <span style={{ fontSize: 8, letterSpacing: '.04em', fontWeight: 700, lineHeight: 1 }}>{size}</span>
+              </button>
+            ))}
+          </div>
+        </Row>
+
+        {/* Legibility */}
+        <Row label={t('high_legibility')} last>
+          <div onClick={() => setHighContrast(!highContrast)}
+            style={{
+              width: 44, height: 24, borderRadius: 12,
+              background: highContrast ? 'var(--em)' : 'var(--border)',
+              cursor: 'pointer',
+              position: 'relative',
+              transition: 'background .2s',
+              flexShrink: 0,
+            }}>
+            <div style={{
+              position: 'absolute',
+              top: 3,
+              left: highContrast ? 22 : 3,
+              width: 18, height: 18, borderRadius: '50%',
+              background: '#fff',
+              transition: 'left .2s',
+              boxShadow: '0 1px 3px rgba(0,0,0,.2)',
+            }}/>
+          </div>
+        </Row>
+      </Section>
 
       {/* Language */}
       <Section label={lang === 'fr' ? 'Langue' : 'Language'}>

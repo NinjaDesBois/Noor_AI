@@ -99,6 +99,18 @@ export const T = {
     module_quran_intro: 'Lire le Coran',
     module_halal: 'Halal & Haram',
     module_dua: 'Les invocations',
+
+    // Appearance
+    appearance: 'Apparence',
+    color_theme: 'Thème de couleur',
+    text_size: 'Taille du texte',
+    legibility: 'Lisibilité',
+    high_legibility: 'Haute lisibilité',
+    theme_ivory: 'Ivoire',
+    theme_emerald: 'Émeraude',
+    theme_night: 'Nuit de Qadr',
+    theme_sand: 'Sable',
+    theme_slate: 'Ardoise',
   },
 
   en: {
@@ -186,6 +198,18 @@ export const T = {
     module_quran_intro: 'Reading the Quran',
     module_halal: 'Halal & Haram',
     module_dua: 'Supplications (Dua)',
+
+    // Appearance
+    appearance: 'Appearance',
+    color_theme: 'Color theme',
+    text_size: 'Text size',
+    legibility: 'Legibility',
+    high_legibility: 'High legibility',
+    theme_ivory: 'Ivory',
+    theme_emerald: 'Emerald',
+    theme_night: 'Night of Qadr',
+    theme_sand: 'Sand',
+    theme_slate: 'Slate',
   }
 }
 

@@ -2,6 +2,9 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useState } from 'react'
 import { LangContext } from './i18n/translations'
 import { getLang } from './utils/storage'
+import { ThemeProvider } from './context/ThemeContext'
+import { FontSizeProvider } from './context/FontSizeContext'
+import { ContrastProvider } from './context/ContrastContext'
 import SplashScreen from './components/SplashScreen'
 import Sidebar from './components/Sidebar'
 import BottomNav from './components/BottomNav'
@@ -24,6 +27,9 @@ export default function App() {
   if (splash) return <SplashScreen onDone={() => setSplash(false)} />
 
   return (
+    <ThemeProvider>
+    <FontSizeProvider>
+    <ContrastProvider>
     <LangContext.Provider value={lang}>
       <BrowserRouter>
         <div className="app-shell">
@@ -48,5 +54,8 @@ export default function App() {
         <BottomNav />
       </BrowserRouter>
     </LangContext.Provider>
+    </ContrastProvider>
+    </FontSizeProvider>
+    </ThemeProvider>
   )
 }
