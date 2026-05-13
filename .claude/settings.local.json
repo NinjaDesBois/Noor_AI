@@ -11,7 +11,11 @@
       "PowerShell(attrib *)",
       "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\Z-BOOK\\\\Dropbox\\\\PC\\\\Desktop\\\\Ninja\\\\noor-ai\" -Recurse -Force)",
       "Bash(Select-Object -ExpandProperty FullName)",
-      "Bash(Sort-Object)"
+      "Bash(Sort-Object)",
+      "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\Z-BOOK\\\\Dropbox\\\\PC\\\\Desktop\\\\Ninja\\\\noor-ai\" -Recurse -Directory)",
+      "Bash(Select-Object FullName)",
+      "Bash(Format-List)",
+      "Bash(npx vite *)"
     ]
   }
 }

@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { useState } from 'react'
 import { LangContext } from './i18n/translations'
 import { getLang } from './utils/storage'
@@ -8,6 +8,7 @@ import { ContrastProvider } from './context/ContrastContext'
 import SplashScreen from './components/SplashScreen'
 import Sidebar from './components/Sidebar'
 import BottomNav from './components/BottomNav'
+import LandingPage from './pages/LandingPage'
 import Home from './pages/Home'
 import Coran from './pages/Coran'
 import SourateReader from './pages/SourateReader'
@@ -32,26 +33,32 @@ export default function App() {
     <ContrastProvider>
     <LangContext.Provider value={lang}>
       <BrowserRouter>
-        <div className="app-shell">
-          <Sidebar />
-          <div className="main-content">
-            <Routes>
-              <Route path="/" element={<Navigate to="/home" replace />} />
-              <Route path="/home" element={<Home />} />
-              <Route path="/coran" element={<Coran />} />
-              <Route path="/coran/:numero" element={<SourateReader />} />
-              <Route path="/prayers" element={<PrayerTimes />} />
-              <Route path="/assistant" element={<Assistant />} />
-              <Route path="/tafsir/:verseKey" element={<Tafsir />} />
-              <Route path="/rappels" element={<Rappels />} />
-              <Route path="/calendrier" element={<Calendrier />} />
-              <Route path="/zakat" element={<Zakat />} />
-              <Route path="/settings" element={<Settings lang={lang} setLang={setLang} />} />
-              <Route path="/nouveaux-musulmans" element={<NouveauxMusulmans />} />
-            </Routes>
-          </div>
-        </div>
-        <BottomNav />
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/*" element={
+            <>
+              <div className="app-shell">
+                <Sidebar />
+                <div className="main-content">
+                  <Routes>
+                    <Route path="home" element={<div className="page-enter"><Home /></div>} />
+                    <Route path="coran" element={<div className="page-enter"><Coran /></div>} />
+                    <Route path="coran/:numero" element={<div className="page-enter"><SourateReader /></div>} />
+                    <Route path="prayers" element={<div className="page-enter"><PrayerTimes /></div>} />
+                    <Route path="assistant" element={<div className="page-enter"><Assistant /></div>} />
+                    <Route path="tafsir/:verseKey" element={<div className="page-enter"><Tafsir /></div>} />
+                    <Route path="rappels" element={<div className="page-enter"><Rappels /></div>} />
+                    <Route path="calendrier" element={<div className="page-enter"><Calendrier /></div>} />
+                    <Route path="zakat" element={<div className="page-enter"><Zakat /></div>} />
+                    <Route path="settings" element={<div className="page-enter"><Settings lang={lang} setLang={setLang} /></div>} />
+                    <Route path="nouveaux-musulmans" element={<div className="page-enter"><NouveauxMusulmans /></div>} />
+                  </Routes>
+                </div>
+              </div>
+              <BottomNav />
+            </>
+          } />
+        </Routes>
       </BrowserRouter>
     </LangContext.Provider>
     </ContrastProvider>

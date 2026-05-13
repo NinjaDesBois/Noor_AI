@@ -189,7 +189,7 @@ export default function SourateReader() {
               <p style={{ fontSize: 13, color: 'var(--w60)', lineHeight: 1.7, margin: '0 0 14px', paddingRight: 4 }}>{verse.translation}</p>
 
               {/* Actions */}
-              <div style={{ display: 'flex', gap: 8 }}>
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                 {/* Play */}
                 <button onClick={() => playVerse(verse)}
                   style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '5px 12px', borderRadius: 20, border: '1px solid', borderColor: playing === verse.key ? 'var(--gold)' : 'var(--border)', background: playing === verse.key ? 'var(--gold-a12)' : 'transparent', color: playing === verse.key ? 'var(--gold)' : 'var(--w30)', cursor: 'pointer', fontFamily: 'var(--font-mono)', fontSize: 9 }}>

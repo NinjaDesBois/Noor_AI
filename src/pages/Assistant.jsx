@@ -234,7 +234,7 @@ export default function Assistant() {
       </div>
 
       {/* Input */}
-      <div style={{ padding: '8px 16px 16px', background: 'var(--ink)', flexShrink: 0 }}>
+      <div style={{ padding: '8px 16px calc(16px + env(safe-area-inset-bottom))', background: 'var(--ink)', flexShrink: 0 }}>
         <div style={{ display: 'flex', gap: 8, alignItems: 'flex-end', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--r-lg)', padding: '8px 8px 8px 14px' }}>
           <textarea ref={inputRef} value={input} onChange={e => setInput(e.target.value)} onKeyDown={handleKey}
             placeholder={t('ask_placeholder')} rows={1}

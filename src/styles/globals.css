@@ -494,3 +494,345 @@ body {
   font-size: 14px;
   line-height: 1.7;
 }
+
+/* ── Animations ── */
+@keyframes noor-fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes noor-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes noor-scale-in {
+  from { opacity: 0; transform: scale(0.94); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes noor-bounce-y {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(8px); }
+}
+@keyframes noor-glow-pulse {
+  0%, 100% { text-shadow: 0 0 20px rgba(201,168,76,0.3); }
+  50%       { text-shadow: 0 0 48px rgba(201,168,76,0.65); }
+}
+@keyframes noor-shimmer {
+  from { background-position: -200% center; }
+  to   { background-position:  200% center; }
+}
+
+/* ── Scroll reveal utility ── */
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ── Global card transitions ── */
+.card { transition: transform 0.22s ease, box-shadow 0.22s ease; }
+.card:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(26,22,20,0.08); }
+
+/* ── Nav transitions ── */
+.snav-item { transition: background 0.18s ease, color 0.18s ease; }
+.bn-item   { transition: color 0.18s ease; }
+
+/* ── Button micro-interactions ── */
+button { transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease; }
+button:active { transform: scale(0.97); }
+
+/* ── Prayer hero glow ── */
+.prayer-hero { transition: box-shadow 0.3s ease; }
+
+/* ── Page transitions ── */
+.page-enter { animation: noor-fade-up 0.4s ease both; }
+
+/* ═══════════════════════════════════════════
+   LANDING PAGE
+   ═══════════════════════════════════════════ */
+.lp-root { overflow-x: hidden; }
+
+/* Hero */
+.lp-hero {
+  min-height: 100vh;
+  background: var(--dark);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 0 24px;
+}
+.lp-hero-content {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  animation: noor-fade-up 0.9s ease both;
+}
+.lp-noor-ar {
+  font-family: var(--font-arabic);
+  font-size: 96px;
+  color: var(--gold);
+  direction: rtl;
+  text-align: center;
+  line-height: 1.2;
+  animation: noor-glow-pulse 3s ease-in-out infinite;
+}
+.lp-noor-en {
+  font-family: var(--font-display);
+  font-size: 48px;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: -0.03em;
+  margin: 0;
+}
+.lp-tagline {
+  font-family: var(--font-body);
+  font-size: 18px;
+  color: var(--text-3);
+  margin: 0;
+  max-width: 480px;
+}
+.lp-cta-btn {
+  margin-top: 8px;
+  padding: 14px 36px;
+  border: 1.5px solid var(--gold);
+  border-radius: var(--r-md);
+  background: transparent;
+  color: var(--gold);
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+.lp-cta-btn:hover  { background: var(--gold); color: var(--dark); }
+.lp-cta-btn:active { transform: scale(0.97); }
+.lp-scroll-indicator {
+  position: absolute;
+  bottom: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255,255,255,0.3);
+  animation: noor-bounce-y 2s ease-in-out infinite;
+}
+
+/* Features */
+.lp-features { background: var(--bg); padding: 96px 40px; }
+.lp-section-title {
+  font-family: var(--font-display);
+  font-size: 36px;
+  font-weight: 600;
+  color: var(--text-1);
+  text-align: center;
+  margin-bottom: 56px;
+  letter-spacing: -0.02em;
+}
+.lp-features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+.lp-feature-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: transform 0.22s ease, box-shadow 0.22s ease, opacity 0.6s ease;
+}
+.lp-feature-card:hover { transform: translateY(-4px); box-shadow: 0 8px 32px rgba(201,168,76,0.12); }
+.lp-feature-icon-wrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(201,168,76,0.10);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold);
+}
+.lp-feature-name { font-family: var(--font-display); font-size: 17px; font-weight: 600; color: var(--text-1); margin: 0; }
+.lp-feature-desc { font-size: 14px; color: var(--text-2); line-height: 1.55; margin: 0; }
+
+/* Prayer section */
+.lp-prayer { background: var(--dark); padding: 96px 40px; }
+.lp-prayer-inner {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+.lp-prayer-text h2 {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 16px;
+  letter-spacing: -0.02em;
+}
+.lp-prayer-text p { font-size: 16px; color: rgba(255,255,255,0.45); line-height: 1.7; margin-bottom: 24px; }
+.lp-text-link {
+  background: none;
+  border: none;
+  border-bottom: 1px solid rgba(201,168,76,0.3);
+  color: var(--gold);
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 600;
+  padding: 0 0 2px;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+.lp-text-link:hover { border-bottom-color: var(--gold); }
+.lp-prayer-mock {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--r-xl);
+  padding: 28px;
+}
+.lp-mock-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+.lp-mock-label  { font-size: 10px; color: rgba(255,255,255,0.3); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 4px; }
+.lp-mock-time   { font-size: 38px; font-weight: 200; color: var(--gold); letter-spacing: -0.04em; line-height: 1; }
+.lp-mock-next   { font-size: 13px; color: rgba(255,255,255,0.4); font-weight: 500; }
+.lp-mock-prayers { border-top: 1px solid rgba(255,255,255,0.07); padding-top: 16px; }
+.lp-mock-prayer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 9px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.lp-mock-prayer-row:last-child { border-bottom: none; }
+.lp-mock-prayer-name { font-size: 13px; color: rgba(255,255,255,0.45); }
+.lp-mock-prayer-time { font-size: 13px; color: rgba(255,255,255,0.35); font-weight: 500; }
+.lp-mock-prayer-row.active .lp-mock-prayer-name { color: #fff; font-weight: 600; }
+.lp-mock-prayer-row.active .lp-mock-prayer-time { color: var(--gold); }
+
+/* Quran section */
+.lp-quran { background: var(--bg); padding: 96px 40px; }
+.lp-quran-inner {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+.lp-quran-text h2 {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--text-1);
+  margin-bottom: 20px;
+  letter-spacing: -0.02em;
+}
+.lp-quran-bullets { list-style: none; padding: 0; margin: 0 0 28px; display: flex; flex-direction: column; gap: 12px; }
+.lp-quran-bullet  { display: flex; align-items: center; gap: 10px; font-size: 15px; color: var(--text-2); }
+.lp-bullet-dot {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: rgba(201,168,76,0.12);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  color: var(--gold);
+}
+.lp-quran-visual {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  padding: 32px;
+}
+.lp-verse-arabic {
+  font-family: var(--font-arabic);
+  font-size: 28px;
+  line-height: 2;
+  direction: rtl;
+  text-align: right;
+  color: var(--text-1);
+  margin-bottom: 20px;
+}
+.lp-verse-divider { height: 1px; background: var(--border); margin-bottom: 16px; }
+.lp-verse-trans   { font-size: 14px; color: var(--text-2); line-height: 1.65; font-style: italic; margin-bottom: 12px; }
+.lp-verse-ref     { font-size: 11px; color: var(--gold); font-weight: 600; letter-spacing: 0.04em; }
+.lp-verse-skeleton {
+  height: 60px;
+  background: linear-gradient(90deg, var(--border) 25%, var(--bg) 50%, var(--border) 75%);
+  background-size: 200% auto;
+  border-radius: var(--r-md);
+  animation: noor-shimmer 1.5s linear infinite;
+}
+
+/* Final CTA */
+.lp-final {
+  background: var(--dark);
+  padding: 96px 40px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+.lp-basmala {
+  font-family: var(--font-arabic);
+  font-size: 36px;
+  color: var(--gold);
+  direction: rtl;
+  text-align: center;
+  line-height: 1.6;
+  animation: noor-glow-pulse 3s ease-in-out infinite;
+}
+.lp-final-title {
+  font-family: var(--font-display);
+  font-size: 36px;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+.lp-footer {
+  background: var(--dark);
+  border-top: 1px solid rgba(255,255,255,0.07);
+  padding: 24px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.lp-footer-brand { font-family: var(--font-display); font-size: 14px; color: rgba(255,255,255,0.45); }
+.lp-footer-sub   { font-size: 12px; color: rgba(255,255,255,0.22); }
+
+/* Landing responsive */
+@media (max-width: 900px) {
+  .lp-features { padding: 72px 24px; }
+  .lp-features-grid { grid-template-columns: repeat(2, 1fr); }
+  .lp-prayer { padding: 72px 24px; }
+  .lp-prayer-inner { grid-template-columns: 1fr; gap: 40px; }
+  .lp-quran { padding: 72px 24px; }
+  .lp-quran-inner { grid-template-columns: 1fr; gap: 40px; }
+  .lp-final { padding: 72px 24px; }
+  .lp-footer { flex-direction: column; gap: 8px; text-align: center; }
+}
+@media (max-width: 600px) {
+  .lp-noor-ar { font-size: 72px; }
+  .lp-noor-en { font-size: 36px; }
+  .lp-tagline { font-size: 15px; }
+  .lp-features { padding: 56px 16px; }
+  .lp-features-grid { grid-template-columns: 1fr; }
+  .lp-section-title { font-size: 28px; margin-bottom: 36px; }
+  .lp-prayer { padding: 56px 16px; }
+  .lp-prayer-text h2 { font-size: 26px; }
+  .lp-quran { padding: 56px 16px; }
+  .lp-quran-text h2 { font-size: 26px; }
+  .lp-final { padding: 56px 16px; }
+  .lp-final-title { font-size: 28px; }
+  .lp-basmala { font-size: 28px; }
+  .lp-footer { padding: 20px 16px; }
+  .lp-prayer-mock { padding: 20px; }
+  .lp-quran-visual { padding: 20px; }
+  .lp-verse-arabic { font-size: 22px; }
+}

@@ -111,6 +111,21 @@ export const T = {
     theme_night: 'Nuit de Qadr',
     theme_sand: 'Sable',
     theme_slate: 'Ardoise',
+
+    // Landing
+    landing_tagline: "Votre compagnon islamique — Coran, Prières, Guidance",
+    landing_cta: "Accéder à l'application",
+    landing_features_title: "Tout ce dont vous avez besoin",
+    landing_final_cta: "Commencez votre voyage",
+    landing_built_for: "Conçu pour l'Oummah",
+    landing_prayer_title: "Horaires de prière précis",
+    landing_prayer_desc: "Des horaires basés sur votre géolocalisation exacte, avec direction Qibla et compte à rebours en direct.",
+    landing_prayer_cta: "Voir les horaires",
+    landing_quran_title: "Le Coran à portée de main",
+    landing_quran_b1: "114 sourates complètes avec translittération",
+    landing_quran_b2: "Audio de récitateurs reconnus",
+    landing_quran_b3: "Tafsir et suivi de mémorisation",
+    landing_quran_cta: "Explorer le Coran",
   },
 
   en: {
@@ -210,6 +225,21 @@ export const T = {
     theme_night: 'Night of Qadr',
     theme_sand: 'Sand',
     theme_slate: 'Slate',
+
+    // Landing
+    landing_tagline: "Your Islamic companion — Quran, Prayers, Guidance",
+    landing_cta: "Enter the app",
+    landing_features_title: "Everything you need",
+    landing_final_cta: "Begin your journey",
+    landing_built_for: "Built for the Ummah",
+    landing_prayer_title: "Precise prayer times",
+    landing_prayer_desc: "Times based on your exact geolocation, with Qibla direction and live countdown.",
+    landing_prayer_cta: "View prayer times",
+    landing_quran_title: "The Quran at your fingertips",
+    landing_quran_b1: "114 complete surahs with transliteration",
+    landing_quran_b2: "Audio from acclaimed reciters",
+    landing_quran_b3: "Tafsir and memorization tracking",
+    landing_quran_cta: "Explore the Quran",
   }
 }
 
