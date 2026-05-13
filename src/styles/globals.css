@@ -445,3 +445,52 @@ body {
   color: var(--text-3);
   padding: 18px 20px 8px;
 }
+
+/* Assistant markdown rendering */
+.assistant-message h2 {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-1);
+  margin: 18px 0 6px 0;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--border);
+}
+.assistant-message h3 {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gold);
+  margin: 14px 0 4px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.assistant-message strong {
+  font-weight: 600;
+  color: var(--text-1);
+}
+.assistant-message em {
+  font-style: italic;
+  color: var(--text-2);
+}
+.assistant-message ul {
+  margin: 8px 0;
+  padding-left: 18px;
+}
+.assistant-message li {
+  margin: 4px 0;
+  color: var(--text-2);
+  font-size: 14px;
+  line-height: 1.6;
+}
+.assistant-message hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 12px 0;
+}
+.assistant-message p {
+  margin: 6px 0;
+  color: var(--text-2);
+  font-size: 14px;
+  line-height: 1.7;
+}

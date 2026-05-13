@@ -62,27 +62,24 @@ const SUGGESTED_EN = [
   "What is Laylat Al-Qadr?",
 ]
 
-// Detects lines with Arabic characters
-const isArabic = str => /[؀-ۿ]/.test(str)
+function parseMarkdown(text) {
+  return text
+    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*([^*؀-ۿ]+?)\*/g, '<em>$1</em>')
+    .replace(/^[-•] (.+)$/gm, '<li>$1</li>')
+    .replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>')
+    .replace(/^---+$/gm, '<hr/>')
+    .replace(/\n\n/g, '</p><p>')
+    .replace(/^(.+)$/, '<p>$1</p>')
+    .replace(/<p><\/p>/g, '')
+    .replace(/<p>(<h[23]>|<ul>|<hr\/>)/g, '$1')
+    .replace(/(<\/h[23]>|<\/ul>|<hr\/>)<\/p>/g, '$1')
+}
 
-function MessageText({ text }) {
-  return (
-    <div>
-      {text.split('\n').map((line, i) => {
-        if (!line.trim()) return <div key={i} style={{ height: 6 }}/>
-        const parts = line.split(/(\*\*[^*]+\*\*)/)
-        const rendered = parts.map((p, j) =>
-          p.startsWith('**') && p.endsWith('**')
-            ? <strong key={j}>{p.slice(2, -2)}</strong>
-            : p
-        )
-        if (isArabic(line)) {
-          return <div key={i} className="ar" style={{ fontSize: 20, marginBottom: 4 }}>{rendered}</div>
-        }
-        return <div key={i} style={{ marginBottom: 2 }}>{rendered}</div>
-      })}
-    </div>
-  )
+function sanitizeHTML(html) {
+  return html.replace(/<(?!\/?(?:h2|h3|strong|em|ul|li|p|hr|br)\b)[^>]*>/gi, '')
 }
 
 export default function Assistant() {
@@ -187,7 +184,7 @@ export default function Assistant() {
                 <span style={{ fontFamily: 'var(--font-arabic)', fontSize: 13, color: 'var(--gold)' }}>ن</span>
               </div>
             )}
-            <div style={{
+            <div className={msg.role === 'assistant' ? 'assistant-message' : undefined} style={{
               maxWidth: '82%',
               padding: '11px 14px',
               borderRadius: msg.role === 'user' ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
@@ -197,7 +194,9 @@ export default function Assistant() {
               color: 'var(--w)',
               lineHeight: 1.6,
             }}>
-              {msg.role === 'assistant' ? <MessageText text={msg.content}/> : msg.content}
+              {msg.role === 'assistant'
+                ? <div dangerouslySetInnerHTML={{ __html: sanitizeHTML(parseMarkdown(msg.content)) }} style={{ lineHeight: 1.7 }}/>
+                : msg.content}
             </div>
           </div>
         ))}
